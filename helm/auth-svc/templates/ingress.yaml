@@ -1,29 +1,21 @@
-{{- if .Values.ingress.enabled -}}
+{{- if .Values.ingress.enabled }}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ include "auth-svc.fullname" . }}
-  labels:
-    {{- include "auth-svc.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+  namespace: {{ .Values.namespace }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    metallb.universe.tf/loadBalancerIPs: {{ .Values.ingress.loadBalancerIP }}
 spec:
   ingressClassName: {{ .Values.ingress.className }}
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
+    - http:
         paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: {{ .pathType }}
+          - path: {{ .Values.ingress.path }}
+            pathType: Prefix
             backend:
               service:
-                name: {{ include "auth-svc.fullname" $ }}
+                name: {{ include "auth-svc.fullname" . }}
                 port:
-                  number: {{ $.Values.service.port }}
-          {{- end }}
-    {{- end }}
+                  number: {{ .Values.service.port }}
 {{- end }}

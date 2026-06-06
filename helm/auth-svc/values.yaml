@@ -1,4 +1,6 @@
 # ── Auth App ──────────────────────────────────────────────────────────────────
+namespace: auth-svc
+
 replicaCount: 2
 
 image:
@@ -32,20 +34,14 @@ securityContext:
 
 service:
   type: ClusterIP
-  port: 8000
+  port: 80
   targetPort: 8000
 
 ingress:
   enabled: true
   className: nginx
+  path: /auth
   loadBalancerIP: "10.0.0.242"
-  annotations:
-    metallb.universe.tf/loadBalancerIPs: "10.0.0.242"
-  hosts:
-    - host: ""
-      paths:
-        - path: /auth
-          pathType: Prefix
 
 resources:
   limits:

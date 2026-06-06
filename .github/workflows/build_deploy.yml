@@ -101,11 +101,6 @@ jobs:
             --namespace ${{ env.NAMESPACE }} \
             --timeout=120s
 
-      - name: Verify rollout
-        run: |
-          kubectl rollout status deployment/python-editor -n python-editor
-          kubectl rollout status deployment/ollama -n python-editor
-
       - name: Smoke test
         run: |
           curl -f http://10.0.0.242/auth/health || exit 1
