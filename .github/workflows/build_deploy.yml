@@ -90,7 +90,6 @@ jobs:
             --set secrets.serviceApiKey=${{ secrets.SERVICE_API_KEY }} \
             --set config.googleRedirectUri=${{ vars.GOOGLE_REDIRECT_URI }} \
             --set config.allowedOrigins=${{ vars.ALLOWED_ORIGINS }} \
-            --set ingress.hosts[0].host=${{ vars.AUTH_HOST }} \
             --rollback-on-failure \
             --timeout 5m \
             --wait \

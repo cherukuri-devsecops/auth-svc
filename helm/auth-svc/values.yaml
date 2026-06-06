@@ -40,7 +40,7 @@ ingress:
   className: nginx
   annotations: {}
   hosts:
-    - host: "auth-svc.example.com"
+    - host: ""
       paths:
         - path: /auth
           pathType: Prefix
