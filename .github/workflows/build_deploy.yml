@@ -26,7 +26,7 @@ jobs:
         run: |
           docker build \
             --build-arg GIT_SHA=${{ github.sha }} \
-            -f app/Dockerfile \
+            -f Dockerfile \
             -t $APP_IMAGE:${{ steps.meta.outputs.image_tag }} .
 
       - name: Push app image
