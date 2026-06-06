@@ -6,7 +6,7 @@ on:
 
 env:
   APP_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/auth-svc
-
+  NAMESPACE: auth-app
 jobs:
   build-auth:
     runs-on: arc-runner-set
@@ -81,7 +81,7 @@ jobs:
           helm upgrade --install auth-app ./helm/auth-app \
             --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
-            --set image.repository=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} \
+            --set image.repository=${{ env.APP_IMAGE }} \
             --set image.tag=${{ needs.build-push.outputs.image-tag }} \
             --set image.pullPolicy=Always \
             --set secrets.secretKey=${{ secrets.SECRET_KEY }} \
