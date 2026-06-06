@@ -37,7 +37,12 @@ service:
 ingress:
   enabled: true
   className: nginx
-  path: /
+  annotations: {}
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
 
 resources:
   limits:

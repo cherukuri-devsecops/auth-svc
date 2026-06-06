@@ -82,7 +82,7 @@ jobs:
             --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
             --set image.repository=${{ env.APP_IMAGE }} \
-            --set image.tag=${{ needs.build-push.outputs.image-tag }} \
+            --set image.tag=${{ needs.build-auth.outputs.image_tag }} \
             --set image.pullPolicy=Always \
             --set secrets.secretKey=${{ secrets.SECRET_KEY }} \
             --set secrets.googleClientId=${{ secrets.GOOGLE_CLIENT_ID }} \
