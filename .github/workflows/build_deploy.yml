@@ -6,7 +6,7 @@ on:
 
 env:
   APP_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/auth-svc
-  NAMESPACE: auth-app
+  NAMESPACE: auth-svc
 jobs:
   build-auth:
     runs-on: arc-runner-set
