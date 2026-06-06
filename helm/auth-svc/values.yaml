@@ -38,7 +38,9 @@ service:
 ingress:
   enabled: true
   className: nginx
-  annotations: {}
+  loadBalancerIP: "10.0.0.242"
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "10.0.0.242"
   hosts:
     - host: ""
       paths:
