@@ -35,7 +35,7 @@ jobs:
   # ── Security scan ─────────────────────────────────────────────────────────
   security-scan:
     name: Security Scan
-    needs: build-push
+    needs: build-auth
     runs-on: arc-runner-set
     permissions:
       security-events: write
