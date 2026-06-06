@@ -103,4 +103,4 @@ jobs:
 
       - name: Smoke test
         run: |
-          curl -f http://10.0.0.242/auth/health || exit 1
+          curl -f http://10.0.0.242/health || exit 1
