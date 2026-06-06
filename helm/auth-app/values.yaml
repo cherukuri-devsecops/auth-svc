@@ -31,6 +31,7 @@ securityContext:
       - ALL
 
 service:
+  type: ClusterIP
   port: 8000
   targetPort: 8000
 
@@ -39,9 +40,9 @@ ingress:
   className: nginx
   annotations: {}
   hosts:
-    - host: ""
+    - host: "auth-app.example.com"
       paths:
-        - path: /
+        - path: /auth
           pathType: Prefix
 
 resources:

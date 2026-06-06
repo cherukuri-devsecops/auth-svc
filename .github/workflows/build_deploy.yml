@@ -90,7 +90,8 @@ jobs:
             --set secrets.serviceApiKey=${{ secrets.SERVICE_API_KEY }} \
             --set config.googleRedirectUri=${{ vars.GOOGLE_REDIRECT_URI }} \
             --set config.allowedOrigins=${{ vars.ALLOWED_ORIGINS }} \
-            --atomic \
+            --set ingress.hosts[0].host=${{ vars.AUTH_HOST }} \
+            --rollback-on-failure \
             --timeout 5m \
             --wait \
             --history-max 5
@@ -108,4 +109,4 @@ jobs:
 
       - name: Smoke test
         run: |
-          curl -f http://10.0.0.242/health || exit 1
+          curl -f -H "Host: ${{ vars.AUTH_HOST }}" http://10.0.0.242/auth/health || exit 1
