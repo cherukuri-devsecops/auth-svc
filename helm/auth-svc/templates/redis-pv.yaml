@@ -1,0 +1,20 @@
+{{- if and .Values.redis.enabled .Values.redis.persistence.enabled .Values.redis.persistence.nfsServer -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ include "auth-svc.redis.fullname" . }}
+  labels:
+    {{- include "auth-svc.labels" . | nindent 4 }}
+spec:
+  capacity:
+    storage: {{ .Values.redis.persistence.size }}
+  accessModes:
+    - {{ .Values.redis.persistence.accessMode }}
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: {{ .Values.redis.persistence.nfsServer }}
+    path: {{ .Values.redis.persistence.nfsPath }}
+  claimRef:
+    namespace: {{ .Release.Namespace }}
+    name: {{ include "auth-svc.redis.fullname" . }}
+{{- end }}
