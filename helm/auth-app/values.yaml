@@ -1,0 +1,124 @@
+# ── Auth App ──────────────────────────────────────────────────────────────────
+replicaCount: 2
+
+image:
+  repository: auth-app
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  port: 8000
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: nginx
+  path: /
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 15
+  periodSeconds: 20
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /health
+    port: 8000
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+# Non-sensitive config injected as a ConfigMap
+config:
+  algorithm: "HS256"
+  accessTokenExpireMinutes: "30"
+  refreshTokenExpireDays: "7"
+  googleRedirectUri: "http://localhost:8000/auth/google/callback"
+  allowedOrigins: "http://localhost:3000,http://localhost:8080,http://localhost:5173"
+
+# Sensitive values — override these or provide an existing secret
+# NEVER commit real credentials to values.yaml; use --set or a sealed-secrets solution
+secrets:
+  # Set existingSecret to use a pre-created k8s Secret instead of creating one
+  existingSecret: ""
+  secretKey: "change-me-in-production"
+  googleClientId: ""
+  googleClientSecret: ""
+  serviceApiKey: "change-me-service-key"
+
+# ── Redis ──────────────────────────────────────────────────────────────────────
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+
+  service:
+    port: 6379
+
+  resources:
+    limits:
+      cpu: 200m
+      memory: 128Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi
+
+  persistence:
+    enabled: true
+    storageClass: ""
+    accessMode: ReadWriteOnce
+    size: 1Gi
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    fsGroup: 999
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
