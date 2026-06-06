@@ -1,5 +1,5 @@
 apiVersion: v2
-name: auth-app
+name: auth-svc
 description: Stateless Google OAuth2 auth service backed by Redis
 type: application
 version: 0.1.0

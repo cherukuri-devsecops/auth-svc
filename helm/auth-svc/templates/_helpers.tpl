@@ -1,14 +1,14 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "auth-app.name" -}}
+{{- define "auth-svc.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Create a default fully qualified app name.
 */}}
-{{- define "auth-app.fullname" -}}
+{{- define "auth-svc.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -24,16 +24,16 @@ Create a default fully qualified app name.
 {{/*
 Create chart label.
 */}}
-{{- define "auth-app.chart" -}}
+{{- define "auth-svc.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels.
 */}}
-{{- define "auth-app.labels" -}}
-helm.sh/chart: {{ include "auth-app.chart" . }}
-{{ include "auth-app.selectorLabels" . }}
+{{- define "auth-svc.labels" -}}
+helm.sh/chart: {{ include "auth-svc.chart" . }}
+{{ include "auth-svc.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -43,42 +43,42 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels.
 */}}
-{{- define "auth-app.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "auth-app.name" . }}
+{{- define "auth-svc.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "auth-svc.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Redis fully qualified name.
 */}}
-{{- define "auth-app.redis.fullname" -}}
-{{- printf "%s-redis" (include "auth-app.fullname" .) | trunc 63 | trimSuffix "-" }}
+{{- define "auth-svc.redis.fullname" -}}
+{{- printf "%s-redis" (include "auth-svc.fullname" .) | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Redis URL built from the internal service name.
 */}}
-{{- define "auth-app.redisUrl" -}}
-{{- printf "redis://%s:%d/0" (include "auth-app.redis.fullname" .) (.Values.redis.service.port | int) }}
+{{- define "auth-svc.redisUrl" -}}
+{{- printf "redis://%s:%d/0" (include "auth-svc.redis.fullname" .) (.Values.redis.service.port | int) }}
 {{- end }}
 
 {{/*
 Name of the Secret that holds sensitive env vars.
 */}}
-{{- define "auth-app.secretName" -}}
+{{- define "auth-svc.secretName" -}}
 {{- if .Values.secrets.existingSecret }}
 {{- .Values.secrets.existingSecret }}
 {{- else }}
-{{- include "auth-app.fullname" . }}
+{{- include "auth-svc.fullname" . }}
 {{- end }}
 {{- end }}
 
 {{/*
 Service account name.
 */}}
-{{- define "auth-app.serviceAccountName" -}}
+{{- define "auth-svc.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "auth-app.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "auth-svc.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}

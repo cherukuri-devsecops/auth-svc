@@ -2,9 +2,9 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ include "auth-app.fullname" . }}
+  name: {{ include "auth-svc.fullname" . }}
   labels:
-    {{- include "auth-app.labels" . | nindent 4 }}
+    {{- include "auth-svc.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
@@ -21,7 +21,7 @@ spec:
             pathType: {{ .pathType }}
             backend:
               service:
-                name: {{ include "auth-app.fullname" $ }}
+                name: {{ include "auth-svc.fullname" $ }}
                 port:
                   number: {{ $.Values.service.port }}
           {{- end }}

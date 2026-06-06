@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "auth-app.fullname" . }}
+  name: {{ include "auth-svc.fullname" . }}
   labels:
-    {{- include "auth-app.labels" . | nindent 4 }}
+    {{- include "auth-svc.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "auth-app.selectorLabels" . | nindent 6 }}
+      {{- include "auth-svc.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       annotations:
@@ -21,7 +21,7 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
       labels:
-        {{- include "auth-app.selectorLabels" . | nindent 8 }}
+        {{- include "auth-svc.selectorLabels" . | nindent 8 }}
         {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
@@ -30,11 +30,11 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "auth-app.serviceAccountName" . }}
+      serviceAccountName: {{ include "auth-svc.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: auth-app
+        - name: auth-svc
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -45,9 +45,9 @@ spec:
               protocol: TCP
           envFrom:
             - configMapRef:
-                name: {{ include "auth-app.fullname" . }}
+                name: {{ include "auth-svc.fullname" . }}
             - secretRef:
-                name: {{ include "auth-app.secretName" . }}
+                name: {{ include "auth-svc.secretName" . }}
           livenessProbe:
             {{- toYaml .Values.livenessProbe | nindent 12 }}
           readinessProbe:

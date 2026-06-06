@@ -78,7 +78,7 @@ jobs:
 
       - name: Helm upgrade
         run: |
-          helm upgrade --install auth-app ./helm/auth-app \
+          helm upgrade --install auth-svc ./helm/auth-svc \
             --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
             --set image.repository=${{ env.APP_IMAGE }} \
@@ -98,7 +98,7 @@ jobs:
 
       - name: Verify rollout
         run: |
-          kubectl rollout status deployment/auth-app \
+          kubectl rollout status deployment/auth-svc \
             --namespace ${{ env.NAMESPACE }} \
             --timeout=120s
 

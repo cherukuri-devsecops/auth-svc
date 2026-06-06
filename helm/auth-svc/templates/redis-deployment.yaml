@@ -2,22 +2,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "auth-app.redis.fullname" . }}
+  name: {{ include "auth-svc.redis.fullname" . }}
   labels:
-    {{- include "auth-app.labels" . | nindent 4 }}
+    {{- include "auth-svc.labels" . | nindent 4 }}
     app.kubernetes.io/component: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "auth-app.selectorLabels" . | nindent 6 }}
+      {{- include "auth-svc.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: redis
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        {{- include "auth-app.selectorLabels" . | nindent 8 }}
+        {{- include "auth-svc.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: redis
     spec:
       securityContext:
@@ -60,7 +60,7 @@ spec:
         - name: data
           {{- if .Values.redis.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ include "auth-app.redis.fullname" . }}
+            claimName: {{ include "auth-svc.redis.fullname" . }}
           {{- else }}
           emptyDir: {}
           {{- end }}

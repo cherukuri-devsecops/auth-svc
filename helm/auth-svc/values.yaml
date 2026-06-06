@@ -2,7 +2,7 @@
 replicaCount: 2
 
 image:
-  repository: auth-app
+  repository: auth-svc
   tag: "latest"
   pullPolicy: IfNotPresent
 
@@ -40,7 +40,7 @@ ingress:
   className: nginx
   annotations: {}
   hosts:
-    - host: "auth-app.example.com"
+    - host: "auth-svc.example.com"
       paths:
         - path: /auth
           pathType: Prefix
