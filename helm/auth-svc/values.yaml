@@ -117,8 +117,10 @@ redis:
   persistence:
     enabled: true
     storageClass: ""
-    accessMode: ReadWriteOnce
-    size: 1Gi
+    accessMode: ReadWriteMany
+    size: 2Gi
+    nfsServer: "10.0.0.40"
+    nfsPath: /data/nfs/redis
 
   securityContext:
     runAsNonRoot: true
