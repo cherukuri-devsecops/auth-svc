@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 env:
   APP_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/auth-svc
   NAMESPACE: auth-svc
