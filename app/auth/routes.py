@@ -24,11 +24,15 @@ GOOGLE_AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
 GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
 GOOGLE_USERINFO_URL = "https://www.googleapis.com/oauth2/v3/userinfo"
 
+# Restrict redirect destinations to known-safe in-app routes.
+ALLOWED_REDIRECT_PATHS = {
+    "/",
+}
 
-def _is_safe_relative_redirect_target(target: str) -> bool:
-    normalized = target.replace("\\", "")
-    parsed = urlparse(normalized)
-    return not parsed.scheme and not parsed.netloc and normalized.startswith("/")
+
+def _is_allowed_redirect_target(target: str) -> bool:
+    normalized = target.strip()
+    return normalized in ALLOWED_REDIRECT_PATHS
 
 
 @router.get("/google")
@@ -89,7 +93,7 @@ async def google_callback(code: str, state: Optional[str] = None):
     access_token = create_access_token(user)
     refresh_token = create_refresh_token(user)
 
-    if state and _is_safe_relative_redirect_target(state):
+    if state and _is_allowed_redirect_target(state):
         params = urlencode({"access_token": access_token, "refresh_token": refresh_token})
         return RedirectResponse(f"{state}?{params}")
 
