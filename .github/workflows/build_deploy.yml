@@ -106,4 +106,4 @@ jobs:
 
       - name: Smoke test
         run: |
-          curl -f http://10.0.0.242/health || exit 1
+          curl -s -f https://auth.cloud-devsecops.com/health || exit 1
