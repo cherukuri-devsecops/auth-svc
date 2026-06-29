@@ -81,6 +81,7 @@ jobs:
 
       - name: Helm upgrade
         run: |
+          ALLOWED_ORIGINS=$(echo "${{ vars.ALLOWED_ORIGINS }}" | sed 's/,/\\,/g')
           helm upgrade --install auth-svc ./helm/auth-svc \
             --namespace ${{ env.NAMESPACE }} \
             --create-namespace \
@@ -92,7 +93,7 @@ jobs:
             --set secrets.googleClientSecret=${{ secrets.GOOGLE_CLIENT_SECRET }} \
             --set secrets.serviceApiKey=${{ secrets.SERVICE_API_KEY }} \
             --set config.googleRedirectUri=${{ vars.GOOGLE_REDIRECT_URI }} \
-            --set config.allowedOrigins=${{ vars.ALLOWED_ORIGINS }} \
+            --set "config.allowedOrigins=${ALLOWED_ORIGINS}" \
             --rollback-on-failure \
             --timeout 5m \
             --wait \
