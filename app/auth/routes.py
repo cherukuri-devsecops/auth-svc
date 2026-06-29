@@ -30,9 +30,13 @@ ALLOWED_REDIRECT_PATHS = {
 }
 
 
-def _is_allowed_redirect_target(target: str) -> bool:
+def _resolve_allowed_redirect_target(target: Optional[str]) -> Optional[str]:
+    if not target:
+        return None
     normalized = target.strip()
-    return normalized in ALLOWED_REDIRECT_PATHS
+    if normalized in ALLOWED_REDIRECT_PATHS:
+        return normalized
+    return None
 
 
 @router.get("/google")
@@ -93,9 +97,10 @@ async def google_callback(code: str, state: Optional[str] = None):
     access_token = create_access_token(user)
     refresh_token = create_refresh_token(user)
 
-    if state and _is_allowed_redirect_target(state):
+    safe_redirect_target = _resolve_allowed_redirect_target(state)
+    if safe_redirect_target:
         params = urlencode({"access_token": access_token, "refresh_token": refresh_token})
-        return RedirectResponse(f"{state}?{params}")
+        return RedirectResponse(f"{safe_redirect_target}?{params}")
 
     return TokenResponse(
         access_token=access_token,
